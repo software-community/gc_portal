@@ -5,7 +5,8 @@ import "./GC_Manager.sol";
 enum Leg {
     Tech,
     Sports,
-    Cult
+    Cult,
+    Literature
 }
 
 contract GC {
