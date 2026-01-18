@@ -5,7 +5,8 @@ import "./GC_Manager.sol";
 enum Leg {
     Tech,
     Sports,
-    Cult
+    Cult,
+    Literature
 }
 
 contract GC {
@@ -84,3 +85,4 @@ contract GC {
         Scores[type_of_contest][contest][team] = score;
     }
 }
+
