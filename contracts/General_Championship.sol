@@ -5,8 +5,7 @@ import "./GC_Manager.sol";
 enum Leg {
     Tech,
     Sports,
-    Cult,
-    Literature
+    Cult
 }
 
 contract GC {
@@ -14,12 +13,16 @@ contract GC {
     bool public is_active = false;
     address private GC_Manager_sol;
     mapping(bytes32 => bool) public Participants;
+    mapping(Leg => mapping(bytes32 => bool) )public Contests;
     uint8 public participant_count;
     mapping(Leg => mapping(bytes32 => mapping(bytes32 => uint))) public Scores;
 
+    event Participants_event(string event_name,bytes32 participant);
+    event Contest_event(string event_name,bytes32 contest);
+
     constructor(bytes32 cand) {
         Year = cand;
-        is_active = true;
+        is_active = true;  
         GC_Manager_sol = (msg.sender);
         participant_count = 0;
     }
@@ -49,13 +52,26 @@ contract GC {
         if (Participants[name] == true) revert("Participant already exists!");
         Participants[name] = true;
         participant_count += 1;
+        emit Participants_event("added",name);
     }
 
     function remove_Participant(bytes32 name) public {
         verify(name);
         Participants[name] = false;
         participant_count -= 1;
+        emit Participants_event("removed",name);
     }
+
+    function add_Contest(bytes32 name) public {
+        verify();
+        emit Contest_event("added",name);
+    }
+
+    function remove_Contest(bytes32 name) public {
+        verify();
+        emit Contest_event("removed",name);
+    }
+
 
     function set_Score(
         Leg type_of_contest,
@@ -64,6 +80,7 @@ contract GC {
         uint score
     ) public {
         verify(team);
+        if(Contests[type_of_contest][contest] == false) revert("Contest doesn't exist!");
         Scores[type_of_contest][contest][team] = score;
     }
 }
