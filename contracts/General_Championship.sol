@@ -14,7 +14,6 @@ contract GC {
     bool public is_active = false;
     address private GC_Manager_sol;
     mapping(bytes32 => bool) public Participants;
-    mapping(Leg => mapping(bytes32 => bool) )public Contests;
     uint8 public participant_count;
     mapping(Leg => mapping(bytes32 => mapping(bytes32 => uint))) public Scores;
 
@@ -81,8 +80,6 @@ contract GC {
         uint score
     ) public {
         verify(team);
-        if(Contests[type_of_contest][contest] == false) revert("Contest doesn't exist!");
         Scores[type_of_contest][contest][team] = score;
     }
 }
-
