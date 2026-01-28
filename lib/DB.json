@@ -1,0 +1,36 @@
+{
+  "Legs": {
+    "Tech": 0,
+    "Sports": 1,
+    "Cult": 2,
+    "Literature": 3
+  },
+  "Manager_Contract_Address":"0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "RPC_URL":"http://localhost:8545",
+  "backEndURI":"/backend.js",
+  "ABI":{
+    "GC_MANAGER": [
+      "constructor()",
+      "function add_admin_rights(address newAdmin)",
+      "function create_GC(bytes32 year)",
+      "function end_GC(bytes32 year)",
+      "function manager() view returns (address)",
+      "function remove_admin_rights(address admin)",
+      "function retrieve_GC(bytes32 year) view returns (address)",
+      "function verify_caller(address caller) view returns (bool)"
+    ],
+    "GC": [
+      "constructor(bytes32 cand)",
+      "function Participants(bytes32) view returns (bool)",
+      "function Scores(uint8, bytes32, bytes32) view returns (uint256)",
+      "function add_Participant(bytes32 name)",
+      "function deactivate()",
+      "function is_active() view returns (bool)",
+      "function participant_count() view returns (uint8)",
+      "function remove_Participant(bytes32 name)",
+      "function set_Score(uint8 type_of_contest, bytes32 contest, bytes32 team, uint256 score)",
+      "function verify(bytes32 name) view returns (bool)",
+      "function verify() view returns (bool)"
+    ]
+  }
+}
