@@ -21,14 +21,14 @@
     ],
     "GC": [
       "constructor(bytes32 cand)",
-      "function Participants(bytes32) view returns (bool)",
+      "function Hostels(bytes32) view returns (bool)",
       "function Scores(uint8, bytes32, bytes32) view returns (uint256)",
-      "function add_Participant(bytes32 name)",
+      "function add_Hostel(bytes32 name)",
       "function deactivate()",
       "function is_active() view returns (bool)",
       "function participant_count() view returns (uint8)",
-      "function remove_Participant(bytes32 name)",
-      "function set_Score(uint8 type_of_contest, bytes32 contest, bytes32 team, uint256 score)",
+      "function remove_Hostel(bytes32 name)",
+      "function set_Score(uint8 type_of_contest, bytes32 contest, bytes32 team, uint256 score, string calldata id)",
       "function verify(bytes32 name) view returns (bool)",
       "function verify() view returns (bool)"
     ]
