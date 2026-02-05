@@ -101,7 +101,7 @@ describe("Manager Tests", () => {
 
   });
 
-  it("Add and Remove Participant", async () => {
+  it("Add and Remove Hostel", async () => {
     const [owner, admin1, nonAdmin] = await ethers.getSigners();
 
     const GC_Manager = await ethers.deployContract("GC_Manager");
@@ -109,12 +109,12 @@ describe("Manager Tests", () => {
     await GC_Manager.add_admin_rights(admin1.address);
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Brahmaputra"));
-    await GC.connect(admin1).add_Participant(bytes32("Beas"));
+    await GC.add_Hostel(bytes32("Brahmaputra"));
+    await GC.connect(admin1).add_Hostel(bytes32("Beas"));
 
 
     // Verify that the participant was added successfully
-    expect(await GC.Participants(bytes32("Brahmaputra"))).to.equal(true);
+    expect(await GC.Hostels(bytes32("Brahmaputra"))).to.equal(true);
 
 
     // Verify the participant count is correct
@@ -122,12 +122,12 @@ describe("Manager Tests", () => {
 
 
     // Verify that a non-admin cannot remove a participant
-    await expect(GC.connect(nonAdmin).remove_Participant(bytes32("Brahmaputra"))).to.be.revertedWith("Unauthorised Action!");
+    await expect(GC.connect(nonAdmin).remove_Hostel(bytes32("Brahmaputra"))).to.be.revertedWith("Unauthorised Action!");
 
-    await GC.remove_Participant(bytes32("Brahmaputra"));
+    await GC.remove_Hostel(bytes32("Brahmaputra"));
 
     // Verify that the participant was removed successfully
-    expect(await GC.Participants(bytes32("Brahmaputra"))).to.equal(false);
+    expect(await GC.Hostels(bytes32("Brahmaputra"))).to.equal(false);
 
 
     // Verify the participant count is correct after removal
@@ -179,12 +179,12 @@ describe("Manager Tests", () => {
     const GC = await ethers.getContractAt("GC", gcAddress);
     
     // Verify that a non-admin cannot add a participant directly
-    await expect(GC.connect(nonAdmin).add_Participant(bytes32("Team"))).to.be.revertedWith("Unauthorised Action!");
+    await expect(GC.connect(nonAdmin).add_Hostel(bytes32("Team"))).to.be.revertedWith("Unauthorised Action!");
     
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     
     // Verify that a non-admin cannot remove a participant directly
-    await expect(GC.connect(nonAdmin).remove_Participant(bytes32("Team"))).to.be.revertedWith("Unauthorised Action!");
+    await expect(GC.connect(nonAdmin).remove_Hostel(bytes32("Team"))).to.be.revertedWith("Unauthorised Action!");
     
     
     // Verify that a non-admin cannot set a score directly
@@ -265,7 +265,7 @@ describe("Manager Tests", () => {
     
   });
   
-  // 3. Participant Management Tests
+  // 3. Hostel Management Tests
   it("Add participant when GC is inactive", async () => {
     const [owner] = await ethers.getSigners();
     const GC_Manager = await ethers.deployContract("GC_Manager");
@@ -275,7 +275,7 @@ describe("Manager Tests", () => {
     await GC_Manager.end_GC(bytes32("2025-2026"));
     
     // Verify that adding a participant to an inactive GC reverts
-    await expect(GC.add_Participant(bytes32("Team"))).to.be.revertedWith("Championship doesn't exist or is deactivated!");
+    await expect(GC.add_Hostel(bytes32("Team"))).to.be.revertedWith("Championship doesn't exist or is deactivated!");
     
   });
   
@@ -285,10 +285,10 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     
     // Verify that adding a duplicate participant reverts
-    await expect(GC.add_Participant(bytes32("Team"))).to.be.revertedWith("Participant already exists!");
+    await expect(GC.add_Hostel(bytes32("Team"))).to.be.revertedWith("Hostel already exists!");
 
   });
   
@@ -300,11 +300,11 @@ describe("Manager Tests", () => {
     const GC = await ethers.getContractAt("GC", gcAddress);
     
     // Verify that removing a non-existent participant reverts
-    await expect(GC.remove_Participant(bytes32("NonExistent"))).to.be.revertedWith("Participant doesn't exist!");
+    await expect(GC.remove_Hostel(bytes32("NonExistent"))).to.be.revertedWith("Hostel doesn't exist!");
     
   });
   
-  it("Participant count accuracy", async () => {
+  it("Hostel count accuracy", async () => {
     const [owner] = await ethers.getSigners();
     const GC_Manager = await ethers.deployContract("GC_Manager");
     await GC_Manager.create_GC(bytes32("2025-2026"));
@@ -314,17 +314,17 @@ describe("Manager Tests", () => {
     // Verify initial participant count is 0
     expect(await GC.participant_count()).to.equal(0);
     
-    await GC.add_Participant(bytes32("Team1"));
+    await GC.add_Hostel(bytes32("Team1"));
     
     // Verify participant count is 1 after adding Team1
     expect(await GC.participant_count()).to.equal(1);
     
-    await GC.add_Participant(bytes32("Team2"));
+    await GC.add_Hostel(bytes32("Team2"));
     
     // Verify participant count is 2 after adding Team2
     expect(await GC.participant_count()).to.equal(2);
     
-    await GC.remove_Participant(bytes32("Team1"));
+    await GC.remove_Hostel(bytes32("Team1"));
     
     // Verify participant count is 1 after removing Team1
     expect(await GC.participant_count()).to.equal(1);
@@ -337,7 +337,7 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     // Authorized call
     
     // Verify that the participant exists
@@ -346,7 +346,7 @@ describe("Manager Tests", () => {
     // Non-existent
     
     // Verify that checking a non-existent participant reverts
-    await expect(GC["verify(bytes32)"](bytes32("NonTeam"))).to.be.revertedWith("Participant doesn't exist!");
+    await expect(GC["verify(bytes32)"](bytes32("NonTeam"))).to.be.revertedWith("Hostel doesn't exist!");
     
     // Unauthorized caller
     
@@ -364,7 +364,7 @@ describe("Manager Tests", () => {
     const GC = await ethers.getContractAt("GC", gcAddress);
 
     // Verify that setting a score for a non-existent participant reverts
-    await expect(GC.set_Score(Leg.Tech, bytes32("Contest"), bytes32("NonTeam"), 100)).to.be.revertedWith("Participant doesn't exist!");
+    await expect(GC.set_Score(Leg.Tech, bytes32("Contest"), bytes32("NonTeam"), 100)).to.be.revertedWith("Hostel doesn't exist!");
     
   });
   
@@ -374,7 +374,7 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     await GC_Manager.end_GC(bytes32("2025-2026"));
     
     // Verify that setting a score when GC is inactive reverts
@@ -388,7 +388,7 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     await GC.set_Score(Leg.Tech, bytes32("Hackathon"), bytes32("Team"), 95);
     await GC.set_Score(Leg.Sports, bytes32("Cricket"), bytes32("Team"), 80);
     
@@ -411,7 +411,7 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team"));
+    await GC.add_Hostel(bytes32("Team"));
     await GC.set_Score(Leg.Tech, bytes32("Contest"), bytes32("Team"), 50);
     
     // Verify the initial score
@@ -430,8 +430,8 @@ describe("Manager Tests", () => {
     await GC_Manager.create_GC(bytes32("2025-2026"));
     const gcAddress = await GC_Manager.retrieve_GC(bytes32("2025-2026"));
     const GC = await ethers.getContractAt("GC", gcAddress);
-    await GC.add_Participant(bytes32("Team1"));
-    await GC.add_Participant(bytes32("Team2"));
+    await GC.add_Hostel(bytes32("Team1"));
+    await GC.add_Hostel(bytes32("Team2"));
     await GC.set_Score(Leg.Tech, bytes32("Hackathon"), bytes32("Team1"), 90);
     await GC.set_Score(Leg.Tech, bytes32("Hackathon"), bytes32("Team2"), 85);
     
@@ -458,13 +458,13 @@ describe("Manager Tests", () => {
       // Non-admin cannot set score
   
       // Verify that setting a score for a non-existent participant reverts
-      await expect(GC.connect(admin1).set_Score(Leg.Sports, bytes32("Cricket"), bytes32("Ganga"), 100)).to.be.revertedWith("Participant doesn't exist!");
+      await expect(GC.connect(admin1).set_Score(Leg.Sports, bytes32("Cricket"), bytes32("Ganga"), 100)).to.be.revertedWith("Hostel doesn't exist!");
   
   
       // Non-admin cannot add participant
   
       // Verify that a non-admin cannot add a participant
-      await expect(GC.connect(nonAdmin).add_Participant(bytes32("Ganga"))).to.be.revertedWith("Unauthorised Action!");
+      await expect(GC.connect(nonAdmin).add_Hostel(bytes32("Ganga"))).to.be.revertedWith("Unauthorised Action!");
   
   
       // Non-admin cannot deactivate GC
