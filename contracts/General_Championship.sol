@@ -13,13 +13,12 @@ contract GC {
     bytes32 Year;
     bool public is_active = false;
     address private GC_Manager_sol;
-    mapping(bytes32 => bool) public Participants;
+    mapping(bytes32 => bool) public Hostels;
     uint8 public participant_count;
     mapping(Leg => mapping(bytes32 => mapping(bytes32 => uint))) public Scores;
 
-    event Participants_event(string event_name,bytes32 participant);
     event Contest_event(string event_name,bytes32 contest);
-
+    event updateScore(string id);
     constructor(bytes32 cand) {
         Year = cand;
         is_active = true;  
@@ -29,7 +28,7 @@ contract GC {
 
     function verify(bytes32 name) public view returns (bool) {
         if (is_active == false) revert("Championship doesn't exist or is deactivated!");
-        if (Participants[name] == false) revert("Participant doesn't exist!");
+        if (Hostels[name] == false) revert("Hostel doesn't exist!");
         if (GC_Manager(GC_Manager_sol).verify_caller(msg.sender) == false)
             revert("Unauthorised Action!");
         return true;
@@ -47,19 +46,18 @@ contract GC {
         is_active = false;
     }
 
-    function add_Participant(bytes32 name) public {
+    function add_Hostel(bytes32 name) public {
         verify();
-        if (Participants[name] == true) revert("Participant already exists!");
-        Participants[name] = true;
+        if (Hostels[name] == true) revert("Hostel already exists!");
+        Hostels[name] = true;
         participant_count += 1;
-        emit Participants_event("added",name);
     }
 
-    function remove_Participant(bytes32 name) public {
+    function remove_Hostel(bytes32 name) public {
         verify(name);
-        Participants[name] = false;
+        Hostels[name] = false;
         participant_count -= 1;
-        emit Participants_event("removed",name);
+        //emit Hostels_event("removed",name);
     }
 
     function add_Contest(bytes32 name) public {
@@ -77,9 +75,12 @@ contract GC {
         Leg type_of_contest,
         bytes32 contest,
         bytes32 team,
-        uint score
+        uint score,
+        string calldata id
     ) public {
         verify(team);
         Scores[type_of_contest][contest][team] = score;
+        emit updateScore(id);
     }
 }
+  
