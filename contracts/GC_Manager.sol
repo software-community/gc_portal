@@ -7,6 +7,7 @@ contract GC_Manager {
     mapping(address => bool) admins;
     mapping(bytes32 => address) Championships;
     event GC_Created(bytes32 year, address GC_Address);
+    event Hostel_event(string ev, bytes32 hostel, bytes32 AY);
 
     constructor() {
         manager = msg.sender;
@@ -51,6 +52,11 @@ contract GC_Manager {
             "Championship doesn't exist or is deactivated!"
         );
         GC(Championships[year]).deactivate();
+    }
+
+    function hostel(string calldata ev, bytes32 Hostel, bytes32 AY) public {
+        verify();
+        emit Hostel_event(ev, Hostel, AY);
     }
 
     function retrieve_GC(bytes32 year) public view returns (address) {
